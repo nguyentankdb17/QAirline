@@ -58,16 +58,17 @@ app.get("/", (req, res) => {
   res.send("Hello from Node API Server Updated");
 });
 
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URL)
-.then(() => {
-    console.log('Connected!');
-
-    app.listen(3001, () => {
-        console.log('Server is running on port 3001');
-    }); 
-})
-.catch((err) => {
-    console.log('Connection Failed!');
-});
+    .then(() => {
+        console.log('Connected to MongoDB!');
+    })
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+    });
