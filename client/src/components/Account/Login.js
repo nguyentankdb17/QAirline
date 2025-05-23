@@ -15,7 +15,7 @@ function Login() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, { email, password }, { withCredentials: true });
             if (response.status === 200) {
-                window.location.href = 'http://localhost:3000/';
+                window.location.href = '/';
             }
         } catch (error) {
             setError(error.response?.data?.message || "Đã có lỗi xảy ra. Vui lòng thử lại sau.");

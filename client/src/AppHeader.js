@@ -24,7 +24,7 @@ function AppHeader() {
 
     const handleLogout = async () => {
         try {
-            await axios.get(`http://localhost:3001/logout`, {
+            await axios.get(`${process.env.REACT_APP_API_URL}/logout`, {
                 withCredentials: true,
             });
             showNoti("Đăng xuất thành công, đang đăng xuất...", 2000);
@@ -39,7 +39,7 @@ function AppHeader() {
     useEffect(() => {
         const checkLogin = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/profile`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/profile`, {
                     withCredentials: true,
                 });
                 showNoti("Bạn đã đăng nhập thành công !", 3000);
