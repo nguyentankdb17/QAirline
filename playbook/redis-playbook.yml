@@ -13,7 +13,7 @@
         name: redis-server
         state: present
 
-    - name: Enabe and start Redis server
+    - name: Enable and start Redis server
       systemd:
         name: redis-server
         enabled: yes

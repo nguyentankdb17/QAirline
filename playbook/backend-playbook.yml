@@ -1,6 +1,8 @@
 ---
-- name: Deploy frontend app by pulling docker image and running a Docker container on a gcp instance
-  hosts: qairline
+- name: Deploy backend by pulling docker image and running a Docker container on a gcp instance
+  hosts: backend
+  vars_files:
+    backend-vars
   become: true
 
   tasks:
@@ -63,16 +65,24 @@
 
     - name: Pull Docker image
       community.docker.docker_image:
-        name: nguyentankdb17/qairline
+        name: nguyentankdb17/qairline-backend
         tag: latest
         source: pull
 
     - name: Run Docker container
       community.docker.docker_container:
         name: qairline
-        image: nguyentankdb17/qairline:latest
+        image: nguyentankdb17/qairline-backend:latest
         state: started
         detach: true
         restart_policy: always
         ports:
-          - "80:80"
+          - "80:8080"
+        env:
+          MONGODB_URL: "{{MONGODB_URL}}"
+          JWT_SECRET: "{{JWT_SECRET}}"
+          OAUTH_REFRESH_TOKEN: "{{OAUTH_REFRESH_TOKEN}}"
+          OAUTH_CLIENT_ID: "{{OAUTH_CLIENT_ID}}"
+          OAUTH_CLIENT_SECRET: "{{OAUTH_CLIENT_SECRET}}"
+          ADMIN_EMAIL: "{{ADMIN_EMAIL}}"
+          REDIS_URL: "{{REDIS_URL}}"

@@ -1,0 +1,59 @@
+---
+- name: Deploy frontend app by pulling code from Git and hosting with Nginx
+  hosts: frontend
+  become: true
+
+  vars:
+    git_repo: "https://github.com/nguyentankdb17/QAirline.git"
+    repo_dest: "/opt/frontend"
+    build_dir: "client"
+    nginx_root: "/var/www/html"
+
+  tasks:
+    - name: Install required packages
+      apt:
+        pkg:
+          - git
+          - nginx
+          - nodejs
+          - npm
+    
+    - name: Update cache
+      apt:
+        update_cache: yes
+
+    - name: Clone the repository
+      git:
+        repo: "{{ git_repo }}"
+        dest: "{{ repo_dest }}"
+        version: main
+        force: yes
+    
+    - name: Copy the environment file
+      copy:
+        src: "/home/nguyentan/Documents/repos/QAirline/client/.env"
+        dest: "{{ repo_dest }}/{{ build_dir }}"
+
+    - name: Install npm dependencies
+      npm:
+        path: "{{ repo_dest }}/{{ build_dir }}"
+        production: no
+
+    - name: Build the app
+      command: npm run build
+      args:
+        chdir: "{{ repo_dest }}/{{ build_dir }}"
+
+    - name: Copy build to nginx html folder
+      copy:
+        src: "{{ repo_dest }}/{{ build_dir }}/build/"
+        dest: "{{ nginx_root }}/"
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        remote_src: yes
+
+    - name: Ensure nginx is running
+      service:
+        name: nginx
+        state: restarted

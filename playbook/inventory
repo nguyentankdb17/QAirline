@@ -1,4 +1,8 @@
 [redis]
-34.126.131.154 ansible_connection=ssh ansible_user=nguyentankdb17 ansible_ssh_private_key_file=~/.ssh/id_rsa
-[qairline]
 35.240.209.45 ansible_connection=ssh ansible_user=nguyentankdb17 ansible_ssh_private_key_file=~/.ssh/id_rsa
+[qairline]
+34.126.131.154 ansible_connection=ssh ansible_user=nguyentankdb17 ansible_ssh_private_key_file=~/.ssh/id_rsa
+[backend]
+34.124.132.102 ansible_connection=ssh ansible_user=nguyentankdb17 ansible_ssh_private_key_file=~/.ssh/id_rsa
+[frontend]
+35.240.132.233 ansible_connection=ssh ansible_user=nguyentankdb17 ansible_ssh_private_key_file=~/.ssh/id_rsa
