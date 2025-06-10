@@ -2,6 +2,12 @@ pipeline {
     agent any
 
     stages {
+        stage('Clone') {
+            steps {
+                git credentialsId: 'github-token', url: 'https://github.com/nguyentankdb17/QAirline.git', branch: 'main'
+            }
+        }
+        
         stage('Build') {
             steps {
                 echo 'Building the Docker image...'
