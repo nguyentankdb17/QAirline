@@ -24,9 +24,9 @@ pipeline {
                         usernameVariable: 'USER',
                         passwordVariable: 'PASS'
                     )]) {
-                        sh 'docker build -t nguyentankdb17/qairline:latest .'
+                        sh 'docker build -t $IMAGE .'
                         sh 'echo $PASS | docker login -u $USER --password-stdin'
-                        sh 'docker push nguyentankdb17/qairline:latest'
+                        sh 'docker push $IMAGE'
                     }
                 }
             }
