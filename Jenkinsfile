@@ -37,11 +37,13 @@ pipeline {
                 echo "Testing ..."
             }
         }
+        
         stage('Deploy') {
             steps {
                 echo "Deploying to Google Cloud Run"
                 withCredentials([file(credentialsId: 'gcp_serviceaccount', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                     sh '''
+                        export PATH=$PATH:/root/google-cloud-sdk/bin
                         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                         gcloud config set project $PROJECT_ID
                         gcloud run deploy $SERVICE_NAME \
