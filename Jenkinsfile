@@ -4,18 +4,32 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building ...'
-                echo "Building on branch ${BRANCH_NAME}"
+                echo 'Building the Docker image...'
+        
+                dir('client') {
+                    sh 'ls -l'
+        
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'USER',
+                        passwordVariable: 'PASS'
+                    )]) {
+                        sh 'docker build -t nguyentankdb17/qairline:latest .'
+                        sh 'echo $PASS | docker login -u $USER --password-stdin'
+                        sh 'docker push nguyentankdb17/qairline:latest'
+                    }
+                }
             }
         }
+
         stage('Test') {
             steps {
-                echo "Testing on branch ${BRANCH_NAME}"
+                echo "Testing ..."
             }
         }
         stage('Deploy') {
             steps {
-                echo "Deploying on branch ${BRANCH_NAME}"
+                echo "Deploying ..."
             }
         }
     }
