@@ -1,14 +1,18 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE = 'nguyentankdb17/qairline:latest'
+        PROJECT_ID = 'jenkin-456203'
+        REGION = 'asia-southeast1'
+        SERVICE_NAME = 'qairline'
+    }
+
     stages {
-        stage('Clone') {
-            steps {
-                git credentialsId: 'github-token', url: 'https://github.com/nguyentankdb17/QAirline.git', branch: 'main'
-            }
-        }
-        
         stage('Build') {
+            when {
+                changeset "**/client/**"
+            }
             steps {
                 echo 'Building the Docker image...'
         
@@ -35,7 +39,18 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo "Deploying ..."
+                echo "Deploying to Google Cloud Run"
+                withCredentials([file(credentialsId: 'gcp_serviceaccount', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh '''
+                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                        gcloud config set project $PROJECT_ID
+                        gcloud run deploy $SERVICE_NAME \
+                            --image=docker.io/$IMAGE \
+                            --region=$REGION \
+                            --platform=managed \
+                            --allow-unauthenticated
+                    '''
+                }
             }
         }
     }
